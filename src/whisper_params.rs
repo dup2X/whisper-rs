@@ -62,6 +62,15 @@ impl<'a, 'b> FullParams<'a, 'b> {
         }
     }
 
+    pub fn set_initial_prompt(&mut self, prompt: Option<&'a str>) {
+        self.fp.initial_prompt = match prompt {
+            Some(prompt) => CString::new(prompt)
+                .expect("prompt contains null byte")
+                .into_raw() as *const _,
+            None => std::ptr::null(),
+        };
+    }
+
     /// Set the number of threads to use for decoding.
     ///
     /// Defaults to min(4, std::thread::hardware_concurrency()).
